@@ -4,12 +4,12 @@ import { Menu, X } from "lucide-react"
 import DemoOne from "../components/title-comp"  
 import { LoginUI } from "../components/login-comp"
 import { PricingComp } from "../components/pricing-comp"
-
+import { InstructionComp } from "../components/instruction-comp"
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
   const [showPricing, setShowPricing] = useState(false)
-
+  const [showInstructions, setShowInstructions] = useState(false)
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
@@ -21,7 +21,7 @@ const Navbar = () => {
         
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {["Home", "Pricing", "Instructions", "Explore"].map((item) => (
+            {["Home", "Pricing", "Instructions"].map((item) => (
               <motion.div 
                 key={item}
                 initial={{ opacity: 0, y: -10 }}
@@ -38,8 +38,16 @@ const Navbar = () => {
                           e.preventDefault();
                           setShowPricing(true);
                           setShowLogin(false);
+                          setShowInstructions(false);
                         }
-                      : undefined
+                    : item === "Instructions"
+                      ? (e) => {
+                          e.preventDefault();
+                          setShowInstructions(true);
+                          setShowLogin(false);
+                          setShowPricing(false);
+                        }
+                    : undefined
                   }
                 >
                   {item}
@@ -91,7 +99,7 @@ const Navbar = () => {
               <X className="h-6 w-6 text-gray-900" />
             </motion.button>
             <div className="flex flex-col space-y-6">
-              {["Home", "Pricing", "Instructions", "Explore"].map((item, i) => (
+              {["Home", "Pricing", "Instructions"].map((item, i) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, x: 20 }}
@@ -108,8 +116,17 @@ const Navbar = () => {
                             e.preventDefault();
                             setShowPricing(true);
                             setShowLogin(false);
+                            setShowInstructions(false);
                             toggleMenu();
                           }
+                        : item === "Instructions"
+                          ? (e) => {
+                              e.preventDefault();
+                              setShowInstructions(true);
+                              setShowLogin(false);
+                              setShowPricing(false);
+                              toggleMenu();
+                            }
                         : toggleMenu
                     }
                   >
@@ -172,6 +189,22 @@ const Navbar = () => {
     </div>
   </div>
 )}
+
+      {/* Modal for Instructions (Full Screen) */}
+      {showInstructions && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-neutral-900">
+          <button
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white text-3xl font-bold z-10"
+            onClick={() => setShowInstructions(false)}
+            aria-label="Close instructions modal"
+          >
+            &times;
+          </button>
+          <div className="w-full h-full flex items-center justify-center p-4 overflow-auto">
+            <InstructionComp />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
