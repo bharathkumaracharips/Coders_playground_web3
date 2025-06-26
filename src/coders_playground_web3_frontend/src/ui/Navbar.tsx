@@ -5,6 +5,7 @@ import DemoOne from "../components/title-comp"
 import { LoginUI } from "../components/login-comp"
 import { PricingComp } from "../components/pricing-comp"
 import { InstructionComp } from "../components/instruction-comp"
+import { Explore } from "../components/explore-comp"
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
@@ -220,6 +221,27 @@ const Navbar = () => {
           </button>
           <div className="w-full h-full flex items-center justify-center p-4 overflow-auto">
             <InstructionComp />
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Explore (Full Screen) */}
+      {showExplore && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-neutral-900">
+          <button
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white text-3xl font-bold z-10"
+            onClick={() => setShowExplore(false)}
+            aria-label="Close explore modal"
+          >
+            &times;
+          </button>
+          <div className="w-full h-full max-h-[100vh] p-4 overflow-y-auto">
+            <Explore
+              title="Beautiful blocks for Shadcn UI."
+              description="Shadcnblocks.com offers the best collection of components and blocks for shadcn/ui."
+              primaryButtonText="Download"
+              primaryButtonUrl="https://shadcnblocks.com"
+            />
           </div>
         </div>
       )}
