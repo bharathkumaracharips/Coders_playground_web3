@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/coders_playground_web3_backend"
+]
+resolver = "2"

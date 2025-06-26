@@ -1,0 +1,27 @@
+{
+  "canisters": {
+    "coders_playground_web3_backend": {
+      "candid": "src/coders_playground_web3_backend/coders_playground_web3_backend.did",
+      "package": "coders_playground_web3_backend",
+      "type": "rust"
+    },
+    "coders_playground_web3_frontend": {
+      "dependencies": [
+        "coders_playground_web3_backend"
+      ],
+      "source": [
+        "src/coders_playground_web3_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "coders_playground_web3_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
