@@ -14,5 +14,17 @@
   "type": "module",
   "workspaces": [
     "src/coders_playground_web3_frontend"
-  ]
+  ],
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.523.0",
+    "motion": "^12.19.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.10",
+    "tailwindcss-animate": "^1.0.7"
+  }
 }
