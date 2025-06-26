@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import DemoOne from "../components/title-comp"  
 import { LoginUI } from "../components/login-comp"
+import { PricingComp } from "../components/pricing-comp"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
+  const [showPricing, setShowPricing] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
@@ -19,7 +21,7 @@ const Navbar = () => {
         
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {["Home", "Pricing", "Docs", "Projects"].map((item) => (
+            {["Home", "Pricing", "Instructions", "Explore"].map((item) => (
               <motion.div 
                 key={item}
                 initial={{ opacity: 0, y: -10 }}
@@ -27,7 +29,19 @@ const Navbar = () => {
                 transition={{ duration: 0.3 }}
                 whileHover={{ scale: 1.05 }}
               >
-                <a href="#" className="text-sm text-gray-900 hover:text-gray-600 transition-colors font-medium">
+                <a
+                  href="#"
+                  className="text-sm text-gray-900 hover:text-gray-600 transition-colors font-medium"
+                  onClick={
+                    item === "Pricing"
+                      ? (e) => {
+                          e.preventDefault();
+                          setShowPricing(true);
+                          setShowLogin(false);
+                        }
+                      : undefined
+                  }
+                >
                   {item}
                 </a>
               </motion.div>
@@ -77,7 +91,7 @@ const Navbar = () => {
               <X className="h-6 w-6 text-gray-900" />
             </motion.button>
             <div className="flex flex-col space-y-6">
-              {["Home", "Pricing", "Docs", "Projects"].map((item, i) => (
+              {["Home", "Pricing", "Instructions", "Explore"].map((item, i) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, x: 20 }}
@@ -85,7 +99,20 @@ const Navbar = () => {
                   transition={{ delay: i * 0.1 + 0.1 }}
                   exit={{ opacity: 0, x: 20 }}
                 >
-                  <a href="#" className="text-base text-gray-900 font-medium" onClick={toggleMenu}>
+                  <a
+                    href="#"
+                    className="text-base text-gray-900 font-medium"
+                    onClick={
+                      item === "Pricing"
+                        ? (e) => {
+                            e.preventDefault();
+                            setShowPricing(true);
+                            setShowLogin(false);
+                            toggleMenu();
+                          }
+                        : toggleMenu
+                    }
+                  >
                     {item}
                   </a>
                 </motion.div>
@@ -127,6 +154,24 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
+      {/* Modal for PricingComp */}
+      {showPricing && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <div className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-0 max-w-5xl w-full mx-4 overflow-y-auto max-h-[95vh]">
+      <button
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl font-bold z-10"
+        onClick={() => setShowPricing(false)}
+        aria-label="Close pricing modal"
+      >
+        &times;
+      </button>
+      <div className="p-0">
+        <PricingComp />
+      </div>
+    </div>
+  </div>
+)}
     </div>
   )
 }
