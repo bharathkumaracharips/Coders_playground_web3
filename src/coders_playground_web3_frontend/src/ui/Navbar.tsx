@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
-
+import DemoOne from "../components/title-comp"
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -11,23 +11,7 @@ const Navbar = () => {
     <div className="flex justify-center w-full py-6 px-4">
       <div className="flex items-center justify-between px-6 py-3 bg-white rounded-full shadow-lg w-full max-w-3xl relative z-10">
         <div className="flex items-center">
-          <motion.div
-            className="w-8 h-8 mr-6"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            whileHover={{ rotate: 10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="url(#paint0_linear)" />
-              <defs>
-                <linearGradient id="paint0_linear" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#FF9966" />
-                  <stop offset="1" stopColor="#FF5E62" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </motion.div>
+          <DemoOne />
         </div>
         
           {/* Desktop Navigation */}

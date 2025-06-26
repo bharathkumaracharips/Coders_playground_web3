@@ -2,7 +2,7 @@ import Dashboard from './Dashboard/App';
 
 function App() {
   return (
-    <main>
+    <main className="bg-black">
       <Dashboard />
     </main>
   );
