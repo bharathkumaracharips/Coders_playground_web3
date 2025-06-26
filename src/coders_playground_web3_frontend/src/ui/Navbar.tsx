@@ -1,23 +1,26 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
-import DemoOne from "../components/title-comp"
+import DemoOne from "../components/title-comp"  
+import { LoginUI } from "../components/login-comp"
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
     <div className="flex justify-center w-full py-6 px-4">
       <div className="flex items-center justify-between px-6 py-3 bg-white rounded-full shadow-lg w-full max-w-3xl relative z-10">
-        <div className="flex items-center">
+        <div className="flex items-center"> 
           <DemoOne />
         </div>
         
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {["Home", "Pricing", "Docs", "Projects"].map((item) => (
-              <motion.div
+              <motion.div 
                 key={item}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -39,12 +42,12 @@ const Navbar = () => {
           transition={{ duration: 0.3, delay: 0.2 }}
           whileHover={{ scale: 1.05 }}
         >
-          <a
-            href="#"
+          <button
+            onClick={() => setShowLogin(true)}
             className="inline-flex items-center justify-center px-5 py-2 text-sm text-white bg-black rounded-full hover:bg-gray-800 transition-colors"
           >
             Get Started
-          </a>
+          </button>
         </motion.div>
 
         {/* Mobile Menu Button */}
@@ -95,18 +98,35 @@ const Navbar = () => {
                 exit={{ opacity: 0, y: 20 }}
                 className="pt-6"
               >
-                <a
-                  href="#"
+                <button
                   className="inline-flex items-center justify-center w-full px-5 py-3 text-base text-white bg-black rounded-full hover:bg-gray-800 transition-colors "
-                  onClick={toggleMenu}
+                  onClick={() => { setShowLogin(true); toggleMenu(); }}
                 >
                   Get Started
-                </a>
+                </button>
               </motion.div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Modal for Login06 */}
+      {showLogin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-0 max-w-md w-full mx-4">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl font-bold z-10"
+              onClick={() => setShowLogin(false)}
+              aria-label="Close login modal"
+            >
+              &times;
+            </button>
+            <div className="p-0">
+              <LoginUI />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
