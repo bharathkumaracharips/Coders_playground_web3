@@ -10,6 +10,7 @@ const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false)
   const [showPricing, setShowPricing] = useState(false)
   const [showInstructions, setShowInstructions] = useState(false)
+  const [showExplore, setShowExplore] = useState(false)
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
@@ -21,7 +22,7 @@ const Navbar = () => {
         
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {["Home", "Pricing", "Instructions"].map((item) => (
+            {["Home", "Pricing", "Instructions", "Explore"].map((item) => (
               <motion.div 
                 key={item}
                 initial={{ opacity: 0, y: -10 }}
@@ -46,6 +47,14 @@ const Navbar = () => {
                           setShowInstructions(true);
                           setShowLogin(false);
                           setShowPricing(false);
+                        }
+                    : item === "Explore"
+                      ? (e) => {
+                          e.preventDefault();
+                          setShowExplore(true);
+                          setShowLogin(false);
+                          setShowPricing(false);
+                          setShowInstructions(false);
                         }
                     : undefined
                   }
@@ -99,7 +108,7 @@ const Navbar = () => {
               <X className="h-6 w-6 text-gray-900" />
             </motion.button>
             <div className="flex flex-col space-y-6">
-              {["Home", "Pricing", "Instructions"].map((item, i) => (
+              {["Home", "Pricing", "Instructions", "Explore"].map((item, i) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, x: 20 }}
@@ -125,6 +134,15 @@ const Navbar = () => {
                               setShowInstructions(true);
                               setShowLogin(false);
                               setShowPricing(false);
+                              toggleMenu();
+                            }
+                        : item === "Explore"
+                          ? (e) => {
+                              e.preventDefault();
+                              setShowExplore(true);
+                              setShowLogin(false);
+                              setShowPricing(false);
+                              setShowInstructions(false);
                               toggleMenu();
                             }
                         : toggleMenu
@@ -157,7 +175,7 @@ const Navbar = () => {
       {/* Modal for Login06 */}
       {showLogin && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-0 max-w-md w-full mx-4">
+          <div className="relative bg-white dark:bg-neutral-900 text-black dark:text-white rounded-2xl shadow-lg p-0 max-w-md w-full mx-4">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl font-bold z-10"
               onClick={() => setShowLogin(false)}
