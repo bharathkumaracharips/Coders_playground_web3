@@ -1,6 +1,6 @@
 import { Navbar } from "../ui/Navbar"
 
-const Demo = () => {
+const NavbarComp = () => {
     return (
         <>
             <Navbar/>
@@ -8,4 +8,4 @@ const Demo = () => {
     )
 }
 
-export {Demo}
+export {NavbarComp}
