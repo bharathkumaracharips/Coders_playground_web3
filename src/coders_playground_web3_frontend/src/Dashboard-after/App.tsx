@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { coders_playground_web3_backend } from '../../../declarations/coders_playground_web3_backend';
-
+import { NavbarComp_DF } from '../components/Nav_df_comp';
 interface DashboardAfterProps {
   walletId: string;
 }
@@ -29,8 +29,12 @@ const DashboardAfter: React.FC<DashboardAfterProps> = ({ walletId }) => {
   }
 
   return (
+    <div>
+      <NavbarComp_DF />
+
     <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '1.5rem' }}>
       {message}
+    </div>
     </div>
   );
 };
