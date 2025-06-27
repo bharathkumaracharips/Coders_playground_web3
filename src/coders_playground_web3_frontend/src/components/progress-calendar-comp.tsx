@@ -83,7 +83,7 @@ export default function ProgressCalendarDemo() {
       {/* Calendar */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border">
         <h2 className="text-lg font-semibold mb-4">2024 Activity</h2>
-        <ProgressCalendar data={sampleData} year={2024} />
+        <ProgressCalendar data={sampleData}  />
       </div>
     </div>
   )
