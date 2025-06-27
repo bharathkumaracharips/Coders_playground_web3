@@ -4,49 +4,49 @@ const About = () => {
   return (
     <About3
       title="About Us"
-      description="Shadcnblocks is a passionate team dedicated to creating innovative solutions that empower businesses to thrive in the digital age."
+      description="Coders Battle Ground — Solve. Prove. Earn. Compete in a Web3-powered coding ecosystem."
       mainImage={{
-        src: "https://shadcnblocks.com/images/block/placeholder-1.svg",
+        src: "#",
         alt: "placeholder",
       }}
       secondaryImage={{
-        src: "https://shadcnblocks.com/images/block/placeholder-2.svg",
+        src: "#",
         alt: "placeholder",
       }}
       breakout={{
-        src: "https://shadcnblocks.com/images/block/block-1.svg",
+        src: "#",
         alt: "logo",
-        title: "Hundreds of blocks at Shadcnblocks.com",
+        title: "Thousands of skill proofs minted at CodersBattleGround.com",
         description:
-          "Providing businesses with effective tools to improve workflows, boost efficiency, and encourage growth.",
+          "Solve challenges, earn blockchain-verified badges, and build a skill profile that actually means something. Whether you’re grinding problems, climbing the leaderboard, or prepping for your next big job — this is your battleground.",
         buttonText: "Discover more",
-        buttonUrl: "https://shadcnblocks.com",
+        buttonUrl: "#",
       }}
       companiesTitle="Valued by clients worldwide"
       companies={[
         {
-          src: "https://shadcnblocks.com/images/block/logos/company/fictional-company-logo-1.svg",
-          alt: "Arc",
+          src: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+          alt: "Google",
         },
         {
-          src: "https://shadcnblocks.com/images/block/logos/company/fictional-company-logo-2.svg",
-          alt: "Descript",
+          src: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+          alt: "Microsoft",
         },
         {
-          src: "https://shadcnblocks.com/images/block/logos/company/fictional-company-logo-3.svg",
-          alt: "Mercury",
+          src: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+          alt: "Amazon",
         },
         {
-          src: "https://shadcnblocks.com/images/block/logos/company/fictional-company-logo-4.svg",
-          alt: "Ramp",
+          src: "https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png",
+          alt: "Facebook",
         },
         {
-          src: "https://shadcnblocks.com/images/block/logos/company/fictional-company-logo-5.svg",
-          alt: "Retool",
+          src: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+          alt: "Apple",
         },
         {
-          src: "https://shadcnblocks.com/images/block/logos/company/fictional-company-logo-6.svg",
-          alt: "Watershed",
+          src: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
+          alt: "IBM",
         }
       ]}
       achievementsTitle="Our Achievements in Numbers"

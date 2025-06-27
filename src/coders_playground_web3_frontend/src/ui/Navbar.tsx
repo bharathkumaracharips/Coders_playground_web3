@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
-import DemoOne from "../components/title-comp"  
+import  Title  from "../components/title-comp"  
 import { LoginUI } from "../components/login-comp"
 import { PricingComp } from "../components/pricing-comp"
 import { InstructionComp } from "../components/instruction-comp"
@@ -16,9 +16,9 @@ const Navbar = () => {
 
   return (
     <div className="flex justify-center w-full py-6 px-4">
-      <div className="flex items-center justify-between px-6 py-3 bg-white rounded-full shadow-lg w-full max-w-3xl relative z-10">
+      <div className="flex items-center justify-between px-7 py-3 bg-white rounded-full shadow-lg w-full max-w-3xl relative z-10">
         <div className="flex items-center"> 
-          <DemoOne />
+          <Title />
         </div>
         
           {/* Desktop Navigation */}
