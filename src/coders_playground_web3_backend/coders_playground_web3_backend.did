@@ -1,3 +1,4 @@
 service : {
     "greet": (text) -> (text) query;
+    "login": (text) -> (record { success: bool; message: text }) ;
 }

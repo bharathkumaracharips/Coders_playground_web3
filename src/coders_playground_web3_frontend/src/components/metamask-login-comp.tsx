@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { coders_playground_web3_backend } from '../../../declarations/coders_playground_web3_backend';
+import { useNavigate } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -6,9 +8,15 @@ declare global {
   }
 }
 
-export const MetaMaskLogin: React.FC = () => {
+interface MetaMaskLoginProps {
+  onWalletConnected?: (walletId: string) => void;
+}
+
+export const MetaMaskLogin: React.FC<MetaMaskLoginProps> = ({ onWalletConnected }) => {
+  
   const [account, setAccount] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const connectMetaMask = async () => {
     if (window.ethereum) {
@@ -16,6 +24,15 @@ export const MetaMaskLogin: React.FC = () => {
         const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
         setAccount(accounts[0]);
         setError(null);
+        if (onWalletConnected) {
+          onWalletConnected(accounts[0]);
+        }
+        const result = await coders_playground_web3_backend.login(accounts[0]);
+        if (result.success) {
+          navigate(`/dashboard-after/${accounts[0]}`);
+        } else {
+          alert(result.message);
+        }
       } catch (err: any) {
         setError(err.message || "User rejected the request");
       }
