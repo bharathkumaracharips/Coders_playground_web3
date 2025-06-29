@@ -31,7 +31,7 @@ export const MetaMaskLogin: React.FC<MetaMaskLoginProps> = ({ onWalletConnected 
         if (result.success) {
           navigate(`/dashboard-after/${accounts[0]}`);
         } else {
-          alert(result.message);
+          setError('Login failed.');
         }
       } catch (err: any) {
         setError(err.message || "User rejected the request");

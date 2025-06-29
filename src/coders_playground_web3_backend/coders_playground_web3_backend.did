@@ -1,4 +1,5 @@
+type LoginResponse = record { success: bool };
 service : {
     "greet": (text) -> (text) query;
-    "login": (text) -> (record { success: bool; message: text }) ;
+    "login": (text) -> (LoginResponse) query;
 }

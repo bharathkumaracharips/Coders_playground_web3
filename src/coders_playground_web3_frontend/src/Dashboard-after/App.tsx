@@ -10,18 +10,25 @@ const DashboardAfter: React.FC<DashboardAfterProps> = ({ walletId }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchLoginMessage = async () => {
+    const fetchLoginStatus = async () => {
       setLoading(true);
+      console.log('DashboardAfter: walletId:', walletId);
       try {
         const result = await coders_playground_web3_backend.login(walletId);
-        setMessage(result.message);
+        console.log('DashboardAfter: backend login result:', result);
+        if (result.success) {
+          setMessage('Login successful!');
+        } else {
+          setMessage('Login failed.');
+        }
       } catch (e) {
-        setMessage('Failed to fetch login message from backend.');
+        console.error('DashboardAfter: error calling backend login:', e);
+        setMessage('Failed to fetch login status from backend.');
       } finally {
         setLoading(false);
       }
     };
-    fetchLoginMessage();
+    fetchLoginStatus();
   }, [walletId]);
 
   if (loading) {
