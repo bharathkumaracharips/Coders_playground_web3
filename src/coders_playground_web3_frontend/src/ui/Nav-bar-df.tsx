@@ -1,199 +1,162 @@
+"use client"
+
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X } from "lucide-react"
-import  Title  from "../components/title-comp"  
+import { Menu, X, User, LogOut } from "lucide-react"
+import Title from "../components/title-comp"
 import { PricingComp } from "../components/pricing-comp"
 import { InstructionComp } from "../components/instruction-comp"
 import { useNavigate } from 'react-router-dom'
 import ProfileComp from '../components/profile-comp'
 
-const Navbar_df = () => {
-  const [isOpen, setIsOpen] = useState(false)
+const navigationLinks = [
+  { name: "Home", href: "#" },
+  { name: "Current Score", href: "#" },
+  { name: "Leaderboard", href: "#" },
+  { name: "Pricing", href: "#pricing" },
+  { name: "Instructions", href: "#instructions" },
+  { name: "Propose Question", href: "#" },
+]
+
+export default function Navbar_df() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showPricing, setShowPricing] = useState(false)
   const [showInstructions, setShowInstructions] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
-  const toggleMenu = () => setIsOpen(!isOpen)
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // TODO: Add any logout cleanup logic here
-    navigate('/dashboard'); // Adjust the route as needed
-  };
+    navigate('/dashboard')
+  }
+
+  // Helper for nav click
+  const handleNavClick = (name: string) => {
+    if (name === "Pricing") setShowPricing(true)
+    else if (name === "Instructions") setShowInstructions(true)
+    else if (name === "Profile") setShowProfile(true)
+    // else: do nothing or navigate
+  }
 
   return (
-    <div className="flex justify-center w-full py-8 px-6">
-      <div className="flex items-center justify-between px-10 py-5 bg-white rounded-full shadow-lg w-full max-w-4xl relative z-10" style={{ minHeight: '90px' }}>
-        <div className="flex items-center"> 
-          <Title />
-        </div>
-        
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-10">
-            {["Home", "Current Score", "Leaderboard", "Pricing", "Instructions", "propose a question"].map((item) => (
-              <motion.div 
-                key={item}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <a
-                  href="#"
-                  className="text-lg text-gray-900 hover:text-gray-600 transition-colors font-medium"
-                  onClick={
-                    item === "Pricing"
-                      ? (e) => {
-                          e.preventDefault();
-                          setShowPricing(true);
-                        }
-                    : item === "Instructions"
-                      ? (e) => {
-                          e.preventDefault();
-                          setShowInstructions(true);
-                          setShowPricing(false);
-                        }
-                    : undefined
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center flex-shrink-0">
+            <Title />
+          </div>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex flex-1 justify-center space-x-8">
+            {navigationLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={e => {
+                  if (["Pricing", "Instructions"].includes(link.name)) {
+                    e.preventDefault();
+                    handleNavClick(link.name);
                   }
-                >
-                  {item}
-                </a>
-              </motion.div>
+                }}
+                className="text-base font-medium text-gray-900 hover:text-blue-600 transition-colors px-2 py-1 relative group"
+              >
+                {link.name}
+                <span className="block h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-200" />
+              </a>
             ))}
-            {/* Profile Icon and Logout Button */}
-            <div className="flex items-center space-x-2 ml-6">
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.1 }}
-              >
-                <button
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
-                  aria-label="Profile"
-                  onClick={() => setShowProfile(true)}
-                >
-                  <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
-                </button>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <button
-                  onClick={handleLogout}
-                  className="inline-flex items-center justify-center px-4 py-2 text-base text-white bg-black rounded-full hover:bg-gray-800 transition-colors"
-                >
-                  Logout
-                </button>
-              </motion.div>
-            </div>
-          </nav>
+          </div>
 
-        {/* Mobile Menu Button */}
-        <motion.button className="md:hidden flex items-center" onClick={toggleMenu} whileTap={{ scale: 0.9 }}>
-          <Menu className="h-6 w-6 text-gray-900" />
-        </motion.button>
-      </div>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="fixed inset-0 bg-white z-50 pt-24 px-6 md:hidden"
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          >
-            <motion.button
-              className="absolute top-6 right-6 p-2"
-              onClick={toggleMenu}
-              whileTap={{ scale: 0.9 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
+          {/* User Controls */}
+          <div className="hidden md:flex items-center space-x-4">
+            <button
+              className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+              onClick={() => setShowProfile(true)}
+              aria-label="Profile"
             >
-              <X className="h-6 w-6 text-gray-900" />
-            </motion.button>
-            <div className="flex flex-col space-y-6">
-              {["Home", "Current Score", "Leaderboard", "Pricing", "Instructions", "propose a quesiton"].map((item, i) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 + 0.1 }}
-                  exit={{ opacity: 0, x: 20 }}
-                >
-                  <a
-                    href="#"
-                    className="text-lg text-gray-900 font-medium"
-                    onClick={
-                      item === "Pricing"
-                        ? (e) => {
-                            e.preventDefault();
-                            setShowPricing(true);
-                            toggleMenu();
-                          }
-                        : item === "Instructions"
-                          ? (e) => {
-                              e.preventDefault();
-                              setShowInstructions(true);
-                              setShowPricing(false);
-                              toggleMenu();
-                            }
-                        : toggleMenu
-                    }
-                  >
-                    {item}
-                  </a>
-                </motion.div>
-              ))}
-              {/* Profile Icon and Logout Button for Mobile */}
-              <div className="flex items-center justify-center space-x-3 pt-2">
-                <button
-                  className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
-                  aria-label="Profile"
-                  onClick={() => setShowProfile(true)}
-                >
-                  <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="inline-flex items-center justify-center px-5 py-3 text-base text-white bg-black rounded-full hover:bg-gray-800 transition-colors"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <User className="w-5 h-5 text-gray-600" />
+            </button>
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center px-4 py-2 text-base text-white bg-black rounded-full hover:bg-gray-800 transition-colors"
+            >
+              <LogOut className="w-4 h-4 mr-1.5" />
+              Logout
+            </button>
+          </div>
 
-      {/* Modal for PricingComp */}
-      {showPricing && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-    <div className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-0 max-w-5xl w-full mx-4 overflow-y-auto max-h-[95vh]">
-      <button
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl font-bold z-10"
-        onClick={() => setShowPricing(false)}
-        aria-label="Close pricing modal"
-      >
-        &times;
-      </button>
-      <div className="p-0">
-        <PricingComp />
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-)}
 
-      {/* Modal for Instructions (Full Screen) */}
+      {/* Mobile Nav */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-200 bg-white">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navigationLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={e => {
+                  if (["Pricing", "Instructions"].includes(link.name)) {
+                    e.preventDefault();
+                    handleNavClick(link.name);
+                    setIsMobileMenuOpen(false);
+                  }
+                }}
+                className="block px-3 py-2 text-base font-medium rounded-md text-gray-900 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+              >
+                {link.name}
+              </a>
+            ))}
+            {/* Profile button for mobile */}
+            <button
+              className="w-full flex items-center justify-start px-3 py-2 mt-2 text-base font-medium rounded-md text-gray-900 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+              onClick={() => { setShowProfile(true); setIsMobileMenuOpen(false); }}
+            >
+              <User className="w-5 h-5 mr-2 text-gray-600" />
+              Profile
+            </button>
+          </div>
+          <div className="pt-4 pb-3 border-t border-gray-200 flex items-center px-5 space-x-3">
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center px-4 py-2 text-base text-white bg-black rounded-full hover:bg-gray-800 transition-colors"
+            >
+              <LogOut className="w-4 h-4 mr-1.5" />
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modals */}
+      {showPricing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="relative bg-white rounded-2xl shadow-lg p-0 max-w-5xl w-full mx-4 overflow-y-auto max-h-[95vh]">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 text-2xl font-bold z-10"
+              onClick={() => setShowPricing(false)}
+              aria-label="Close pricing modal"
+            >
+              &times;
+            </button>
+            <div className="p-0">
+              <PricingComp />
+            </div>
+          </div>
+        </div>
+      )}
       {showInstructions && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-neutral-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
           <button
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white text-3xl font-bold z-10"
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-3xl font-bold z-10"
             onClick={() => setShowInstructions(false)}
             aria-label="Close instructions modal"
           >
@@ -204,13 +167,11 @@ const Navbar_df = () => {
           </div>
         </div>
       )}
-
-      {/* Modal for ProfileComp */}
       {showProfile && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-0 max-w-2xl w-full mx-4 overflow-y-auto max-h-[95vh]">
+          <div className="relative bg-white rounded-2xl shadow-lg p-0 max-w-2xl w-full mx-4 overflow-y-auto max-h-[95vh]">
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 dark:hover:text-white text-2xl font-bold z-10"
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 text-2xl font-bold z-10"
               onClick={() => setShowProfile(false)}
               aria-label="Close profile modal"
             >
@@ -222,9 +183,6 @@ const Navbar_df = () => {
           </div>
         </div>
       )}
-    </div>
+    </nav>
   )
 }
-
-
-export { Navbar_df }
