@@ -45,41 +45,8 @@ const generateSampleData = () => {
 export default function ProgressCalendarDemo() {
   const sampleData = generateSampleData()
 
-  // Calculate some stats
-  const totalContributions = sampleData.reduce((sum, day) => sum + day.count, 0)
-  const activeDays = sampleData.length
-  const currentStreak = calculateCurrentStreak(sampleData)
-  const longestStreak = calculateLongestStreak(sampleData)
-
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold">Progress Tracker Calendar</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Track your daily progress with a GitHub-style contribution calendar
-        </p>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-          <div className="text-2xl font-bold text-green-600">{totalContributions}</div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">Total contributions</div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-          <div className="text-2xl font-bold text-blue-600">{activeDays}</div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">Active days</div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-          <div className="text-2xl font-bold text-purple-600">{currentStreak}</div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">Current streak</div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-          <div className="text-2xl font-bold text-orange-600">{longestStreak}</div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">Longest streak</div>
-        </div>
-      </div>
-
       {/* Calendar */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border">
         <h2 className="text-lg font-semibold mb-4">2024 Activity</h2>

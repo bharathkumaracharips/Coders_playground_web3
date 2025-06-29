@@ -169,15 +169,11 @@ export default function Navbar_df() {
         </div>
       )}
       {showProfile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="relative bg-white rounded-2xl shadow-lg p-0 max-w-2xl w-full mx-4 overflow-y-auto max-h-[95vh]">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 text-2xl font-bold z-10"
-              onClick={() => setShowProfile(false)}
-              aria-label="Close profile modal"
-            >
-              &times;
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setShowProfile(false)}>
+          <div
+            className="relative bg-white rounded-2xl shadow-lg p-0 max-w-2xl w-full mx-4 overflow-y-auto max-h-[95vh]"
+            onClick={e => e.stopPropagation()}
+          >
             <div className="p-0">
               <ProfileComp walletId={walletId || ""} />
             </div>
