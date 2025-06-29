@@ -5,7 +5,7 @@ import { Menu, X, User, LogOut } from "lucide-react"
 import Title from "../components/title-comp"
 import { PricingComp } from "../components/pricing-comp"
 import { InstructionComp } from "../components/instruction-comp"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import ProfileComp from '../components/profile-comp'
 
 const navigationLinks = [
@@ -23,6 +23,7 @@ export default function Navbar_df() {
   const [showInstructions, setShowInstructions] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const navigate = useNavigate();
+  const { walletId } = useParams();
 
   const handleLogout = () => {
     navigate('/dashboard')
@@ -178,7 +179,7 @@ export default function Navbar_df() {
               &times;
             </button>
             <div className="p-0">
-              <ProfileComp />
+              <ProfileComp walletId={walletId || ""} />
             </div>
           </div>
         </div>
