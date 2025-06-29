@@ -29,7 +29,7 @@ const Navbar_df = () => {
         
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-10">
-            {["Home", "Current Score", "Leaderboard", "Pricing", "Instructions"].map((item) => (
+            {["Home", "Current Score", "Leaderboard", "Pricing", "Instructions", "propose a question"].map((item) => (
               <motion.div 
                 key={item}
                 initial={{ opacity: 0, y: -10 }}
@@ -118,7 +118,7 @@ const Navbar_df = () => {
               <X className="h-6 w-6 text-gray-900" />
             </motion.button>
             <div className="flex flex-col space-y-6">
-              {["Home", "Current Score", "Leaderboard", "Pricing", "Instructions"].map((item, i) => (
+              {["Home", "Current Score", "Leaderboard", "Pricing", "Instructions", "propose a quesiton"].map((item, i) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, x: 20 }}
