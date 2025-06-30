@@ -7,7 +7,6 @@ import { Footer } from '../components/footer-comp';
 import { OptionComp } from '../components/options';
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
 interface DashboardAfterProps {
   walletId: string;
 }

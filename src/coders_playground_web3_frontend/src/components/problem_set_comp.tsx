@@ -34,6 +34,7 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
+  ArrowLeft,
 } from "lucide-react";
 import { Button } from "../ui/explore-button";
 import { Checkbox } from "../ui/checkbox-footer";
@@ -65,6 +66,7 @@ import {
 } from "../ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Label } from "../ui/explore-lable";
+import { CodeWritingComp } from "./codewriting-comp";
 
 // Types
 type Problem = {
@@ -359,7 +361,7 @@ const columns: ColumnDef<Problem>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }: { row: Row<Problem> }) => {
+    cell: ({ row, table }) => {
       const problem = row.original;
       return (
         <DropdownMenu>
@@ -371,7 +373,7 @@ const columns: ColumnDef<Problem>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => (table.options.meta as any)?.setSelectedProblem(problem)}>
               <Code className="mr-2 h-4 w-4" />
               Solve Problem
             </DropdownMenuItem>
@@ -395,6 +397,7 @@ function CodingProblemsTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [selectedProblem, setSelectedProblem] = React.useState<Problem | null>(null);
 
   const table = useReactTable({
     data: problems,
@@ -412,6 +415,9 @@ function CodingProblemsTable() {
       columnFilters,
       columnVisibility,
       rowSelection,
+    },
+    meta: {
+      setSelectedProblem,
     },
   });
 
@@ -464,6 +470,26 @@ function CodingProblemsTable() {
       : selectedTags.filter(t => t !== value);
     table.getColumn("tags")?.setFilterValue(newFilterValue.length ? newFilterValue : undefined);
   };
+
+  if (selectedProblem) {
+    return (
+      <div className="h-screen w-screen bg-neutral-900 flex flex-col">
+        <div className="flex-shrink-0">
+          <Button
+            onClick={() => setSelectedProblem(null)}
+            className="m-4 bg-gray-800 text-white hover:bg-gray-700"
+            variant="outline"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Problems
+          </Button>
+        </div>
+        <div className="flex-grow">
+          <CodeWritingComp problem={selectedProblem} />
+        </div>
+      </div>
+    );
+  }
 
   return (
         <div className="w-full space-y-6 p-6 bg-gradient-to-br from-slate-50 to-white min-h-screen">
