@@ -1,119 +1,250 @@
-'use client';
-import { Link } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { RippleButton } from "../ui/multi-type-rippless-button";
+// --- Internal Helper Components (Not exported) --- //
 
-export const PricingUI = () => {
-  const [billingCycle, setBillingCycle] = useState('monthly');
-  const discountRate = 20;
+const CheckIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16" height="16" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="3"
+    strokeLinecap="round" strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+);
 
-  const pricingPlans = [
-    {
-      name: 'Basic Plan',
-      monthlyPrice: 10,
-      description: 'Basic features for up to 10 users.',
-      features: [
-        'Access to essential tools',
-        'Basic chat and email support',
-        'Limited storage capacity',
-        'Monthly usage reports',
-      ],
-      link: 'https://i.imgur.com/VRtqhGC.png',
-    },
-    {
-      name: 'Business Plan',
-      monthlyPrice: 25,
-      description: 'Advanced tools for up to 20 users.',
-      features: [
-        'Advanced tools for power users',
-        'Priority support with live chat',
-        'More storage and bandwidth',
-        'Detailed analytics',
-      ],
-      link: 'https://i.imgur.com/VRtqhGC.png',
-    },
-    {
-      name: 'Enterprise Plan',
-      monthlyPrice: 40,
-      description: 'Advanced features + unlimited users.',
-      features: [
-        'Custom solutions for big teams',
-        'Dedicated account manager',
-        'Unlimited storage and bandwidth',
-        'Advanced analytics and reporting',
-      ],
-      link: 'https://i.imgur.com/VRtqhGC.png',
-    },
-  ];
+const ShaderCanvas = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const glProgramRef = useRef<WebGLProgram | null>(null);
+  const glBgColorLocationRef = useRef<WebGLUniformLocation | null>(null);
+  const glRef = useRef<WebGLRenderingContext | null>(null);
+  const [backgroundColor, setBackgroundColor] = useState([1.0, 1.0, 1.0]);
 
-  const calculateAnnualPrice = (monthlyPrice: number) => {
-    return monthlyPrice * 12 * (1 - discountRate / 100);
-  };
+  useEffect(() => {
+    const root = document.documentElement;
+    const updateColor = () => {
+      const isDark = root.classList.contains('dark');
+      setBackgroundColor(isDark ? [0, 0, 0] : [1.0, 1.0, 1.0]);
+    };
+    updateColor();
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          updateColor();
+        }
+      }
+    });
+    observer.observe(root, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const gl = glRef.current;
+    const program = glProgramRef.current;
+    const location = glBgColorLocationRef.current;
+    if (gl && program && location) {
+      gl.useProgram(program);
+      gl.uniform3fv(location, new Float32Array(backgroundColor));
+    }
+  }, [backgroundColor]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const gl = canvas.getContext('webgl');
+    if (!gl) { console.error("WebGL not supported"); return; }
+    glRef.current = gl;
+
+    const vertexShaderSource = `attribute vec2 aPosition; void main() { gl_Position = vec4(aPosition, 0.0, 1.0); }`;
+    const fragmentShaderSource = `
+      precision highp float;
+      uniform float iTime;
+      uniform vec2 iResolution;
+      uniform vec3 uBackgroundColor;
+      mat2 rotate2d(float angle){ float c=cos(angle),s=sin(angle); return mat2(c,-s,s,c); }
+      float variation(vec2 v1,vec2 v2,float strength,float speed){ return sin(dot(normalize(v1),normalize(v2))*strength+iTime*speed)/100.0; }
+      vec3 paintCircle(vec2 uv,vec2 center,float rad,float width){
+        vec2 diff = center-uv;
+        float len = length(diff);
+        len += variation(diff,vec2(0.,1.),5.,2.);
+        len -= variation(diff,vec2(1.,0.),5.,2.);
+        float circle = smoothstep(rad-width,rad,len)-smoothstep(rad,rad+width,len);
+        return vec3(circle);
+      }
+      void main(){
+        vec2 uv = gl_FragCoord.xy/iResolution.xy;
+        uv.x *= 1.5; uv.x -= 0.25;
+        float mask = 0.0;
+        float radius = .35;
+        vec2 center = vec2(.5);
+        mask += paintCircle(uv,center,radius,.035).r;
+        mask += paintCircle(uv,center,radius-.018,.01).r;
+        mask += paintCircle(uv,center,radius+.018,.005).r;
+        vec2 v=rotate2d(iTime)*uv;
+        vec3 foregroundColor=vec3(v.x,v.y,.7-v.y*v.x);
+        vec3 color=mix(uBackgroundColor,foregroundColor,mask);
+        color=mix(color,vec3(1.),paintCircle(uv,center,radius,.003).r);
+        gl_FragColor=vec4(color,1.);
+      }`;
+
+    const compileShader = (type: number, source: string) => {
+      const shader = gl.createShader(type);
+      if (!shader) throw new Error("Could not create shader");
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        throw new Error(gl.getShaderInfoLog(shader) || "Shader compilation error");
+      }
+      return shader;
+    };
+
+    const program = gl.createProgram();
+    if (!program) throw new Error("Could not create program");
+    const vertexShader = compileShader(gl.VERTEX_SHADER, vertexShaderSource);
+    const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+    glProgramRef.current = program;
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+    const aPosition = gl.getAttribLocation(program, 'aPosition');
+    gl.enableVertexAttribArray(aPosition);
+    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+    const iTimeLoc = gl.getUniformLocation(program, 'iTime');
+    const iResLoc = gl.getUniformLocation(program, 'iResolution');
+    glBgColorLocationRef.current = gl.getUniformLocation(program, 'uBackgroundColor');
+    gl.uniform3fv(glBgColorLocationRef.current, new Float32Array(backgroundColor));
+
+    let animationFrameId: number;
+    const render = (time: number) => {
+      gl.uniform1f(iTimeLoc, time * 0.001);
+      gl.uniform2f(iResLoc, canvas.width, canvas.height);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      animationFrameId = requestAnimationFrame(render);
+    };
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    animationFrameId = requestAnimationFrame(render);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full block z-0 bg-background" />;
+};
+
+
+// --- EXPORTED Building Blocks --- //
+
+/**
+ * We export the Props interface so you can easily type the data for your plans.
+ */
+export interface PricingCardProps {
+  planName: string;
+  description: string;
+  price: string;
+  features: string[];
+  buttonText: string;
+  isPopular?: boolean;
+  buttonVariant?: 'primary' | 'secondary';
+}
+
+/**
+ * We export the PricingCard component itself in case you want to use it elsewhere.
+ */
+export const PricingCard = ({
+  planName, description, price, features, buttonText, isPopular = false, buttonVariant = 'primary'
+}: PricingCardProps) => {
+  const cardClasses = `
+    backdrop-blur-[14px] bg-gradient-to-br rounded-2xl shadow-xl flex-1 max-w-xs px-7 py-8 flex flex-col transition-all duration-300
+    from-black/5 to-black/0 border border-black/10
+    dark:from-white/10 dark:to-white/5 dark:border-white/10 dark:backdrop-brightness-[0.91]
+    ${isPopular ? 'scale-105 relative ring-2 ring-cyan-400/20 dark:from-white/20 dark:to-white/10 dark:border-cyan-400/30 shadow-2xl' : ''}
+  `;
+  const buttonClasses = `
+    mt-auto w-full py-2.5 rounded-xl font-semibold text-[14px] transition font-sans
+    ${buttonVariant === 'primary' 
+      ? 'bg-cyan-400 hover:bg-cyan-300 text-foreground' 
+      : 'bg-black/10 hover:bg-black/20 text-foreground border border-black/20 dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:border-white/20'
+    }
+  `;
 
   return (
-    <div>
-      <div className="flex flex-col justify-center items-center gap-4 sm:gap-5 mt-5">
-        <div className="text-4xl sm:text-6xl">Our Pricing Plans</div>
-        <span className="text-center text-gray-300 text-sm sm:text-base">
-          Select from our range of affordable plans <br /> tailored to suit every budget.
-        </span>
-      </div>
-
-      <div className="flex justify-center items-center mt-5">
-        <div
-          className={`${billingCycle === 'annually' ? 'bg-gradient-to-bl from-gray-200 via-gray-400 to-gray-600' : 'bg-gradient-to-br from-gray-200 via-gray-400 to-gray-600'} w-56 h-9 rounded-full flex justify-between items-center px-1 z-50`}
-        >
-          <span
-            className={`px-5 py-1 rounded-full text-sm cursor-pointer ${billingCycle === 'monthly' ? 'bg-black text-white' : ''}`}
-            onClick={() => setBillingCycle('monthly')}
-          >
-            Monthly
-          </span>
-          <span
-            className={`px-2 py-1 rounded-full text-sm cursor-pointer ${billingCycle === 'annually' ? 'bg-black text-white' : ''}`}
-            onClick={() => setBillingCycle('annually')}
-          >
-            Annually<span className="bg-white text-black rounded-full px-1 ml-1 text-xs">-{discountRate}%</span>
-          </span>
+    <div className={cardClasses.trim()}>
+      {isPopular && (
+        <div className="absolute -top-4 right-4 px-3 py-1 text-[12px] font-semibold rounded-full bg-cyan-400 text-foreground dark:text-black">
+          Most Popular
         </div>
+      )}
+      <div className="mb-3">
+        <h2 className="text-[48px] font-extralight tracking-[-0.03em] text-foreground font-display">{planName}</h2>
+        <p className="text-[16px] text-foreground/70 mt-1 font-sans">{description}</p>
       </div>
-
-      <div className="flex justify-center items-center flex-wrap gap-3 px-2 mb-3 mt-6">
-        {pricingPlans.map((plan) => (
-          <div key={plan.name} className="bg-white w-80 rounded-2xl h-auto pb-10 shadow-lg z-50">
-            <div className="p-5 rounded-2xl">
-              <span className="text-black">{plan.name}</span>
-              <div className="mt-3 mb-2">
-                <span className="text-black text-3xl">
-                  ${billingCycle === 'monthly' ? plan.monthlyPrice : calculateAnnualPrice(plan.monthlyPrice).toFixed(2)}{' '}
-                  <span className="text-xs">{billingCycle === 'annually' ? 'annually' : 'per month'}</span>
-                </span>
-              </div>
-              <span className="text-slate-600 text-sm">{plan.description}</span>
-              <div className="mt-5">
-              <Link href={plan.link} target='_blank'>
-                <button
-                  className="bg-black animatedButton text-white w-full h-10 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600"
-                  aria-label={`Get started with the ${plan.name}`}
-                >
-                  Get started
-                </button>
-              </Link>
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl pl-5 pt-2">
-              <span className="text-black">Features</span>
-              {plan.features.map((feature, index) => (
-                <span key={index} className="text-slate-600 text-sm flex items-center gap-1 mt-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-                  </svg>
-                  {feature}
-                </span>
-              ))}
-            </div>
-          </div>
+      <div className="my-6 flex items-baseline gap-2">
+        <span className="text-[48px] font-extralight text-foreground font-display">${price}</span>
+        <span className="text-[14px] text-foreground/70 font-sans">/mo</span>
+      </div>
+      <div className="card-divider w-full mb-5 h-px bg-[linear-gradient(90deg,transparent,rgba(0,0,0,0.1)_50%,transparent)] dark:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.09)_20%,rgba(255,255,255,0.22)_50%,rgba(255,255,255,0.09)_80%,transparent)]"></div>
+      <ul className="flex flex-col gap-2 text-[14px] text-foreground/90 mb-6 font-sans">
+        {features.map((feature, index) => (
+          <li key={index} className="flex items-center gap-2">
+            <CheckIcon className="text-cyan-400 w-4 h-4" /> {feature}
+          </li>
         ))}
-      </div>
+      </ul>
+      <RippleButton className={buttonClasses.trim()}>{buttonText}</RippleButton>
+    </div>
+  );
+};
+
+
+// --- EXPORTED Customizable Page Component --- //
+
+interface ModernPricingPageProps {
+  /** The main title. Can be a string or a ReactNode for more complex content. */
+  title: React.ReactNode;
+  /** The subtitle text appearing below the main title. */
+  subtitle: React.ReactNode;
+  /** An array of plan objects that conform to PricingCardProps. */
+  plans: PricingCardProps[];
+  /** Whether to show the animated WebGL background. Defaults to true. */
+  showAnimatedBackground?: boolean;
+}
+
+export const ModernPricingPage = ({
+  title,
+  subtitle,
+  plans,
+  showAnimatedBackground = true,
+}: ModernPricingPageProps) => {
+  return (
+    <div className="bg-background text-foreground min-h-screen w-full overflow-x-hidden">
+      {showAnimatedBackground && <ShaderCanvas />}
+      <main className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-5xl mx-auto text-center mb-14">
+          <h1 className="text-[48px] md:text-[64px] font-extralight leading-tight tracking-[-0.03em] bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-cyan-500 to-blue-600 dark:from-white dark:via-cyan-300 dark:to-blue-400 font-display">
+            {title}
+          </h1>
+          <p className="mt-3 text-[16px] md:text-[20px] text-foreground/80 max-w-2xl mx-auto font-sans">
+            {subtitle}
+          </p>
+        </div>
+        <div className="flex flex-col md:flex-row gap-8 md:gap-6 justify-center items-center w-full max-w-4xl">
+          {plans.map((plan) => <PricingCard key={plan.planName} {...plan} />)}
+        </div>
+      </main>
     </div>
   );
 };
