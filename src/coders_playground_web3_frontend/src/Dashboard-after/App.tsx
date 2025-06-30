@@ -59,11 +59,11 @@ const DashboardAfter: React.FC<DashboardAfterProps> = ({ walletId }) => {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <NavbarComp_DF />
-      <main className="flex-grow flex flex-col">
+      <main className="flex flex-col flex-grow">
         {activeView !== 'dashboard' && (
           <button
             onClick={() => setActiveView('dashboard')}
-            className="flex items-center gap-2 text-white/70 hover:text-white m-4 self-start"
+            className="sticky top-0 z-10 flex items-center gap-2 text-white/70 hover:text-white m-4 self-start bg-black/80 backdrop-blur-sm p-2 rounded-lg"
           >
             <ArrowLeft className="h-5 w-5" />
             Back
@@ -71,16 +71,14 @@ const DashboardAfter: React.FC<DashboardAfterProps> = ({ walletId }) => {
         )}
         <div
           className={cn(
-            'flex-grow flex justify-center',
-            activeView === 'dashboard'
-              ? 'items-center'
-              : 'overflow-y-auto pt-8'
+            'flex flex-grow justify-center',
+            activeView === 'dashboard' && 'items-center'
           )}
         >
           {renderContent()}
         </div>
+        {activeView === 'dashboard' && <Footer />}
       </main>
-      {activeView === 'dashboard' && <Footer />}
     </div>
   );
 };

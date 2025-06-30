@@ -10,11 +10,11 @@ import ProfileComp from '../components/profile-comp'
 
 const navigationLinks = [
   { name: "Home", href: "#" },
+  { name: "Learn", href: "#"},
   { name: "Current Score", href: "#" },
-  { name: "Leaderboard", href: "#" },
-  { name: "Pricing", href: "#pricing" },
   { name: "Instructions", href: "#instructions" },
-  { name: "Propose Question", href: "#" },
+  { name: "Your Proposal", href: "#" },
+  { name: "Pricing", href: "#pricing" },
 ]
 
 export default function Navbar_df() {

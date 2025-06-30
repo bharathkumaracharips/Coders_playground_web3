@@ -7,13 +7,11 @@ interface OptionCompProps {
 
 const OptionComp: React.FC<OptionCompProps> = ({ onOptionSelect }) => {
   return (
-    <div className="flex w-full h-screen justify-center items-center bg-black">
-      <CardCanvas>
-        <Card>
-          <XCard onOptionSelect={onOptionSelect} />
-        </Card>
-      </CardCanvas>
-    </div>
+    <CardCanvas>
+      <Card>
+        <XCard onOptionSelect={onOptionSelect} />
+      </Card>
+    </CardCanvas>
   );
 };
 

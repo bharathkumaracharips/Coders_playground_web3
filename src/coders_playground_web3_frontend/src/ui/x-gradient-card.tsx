@@ -1,6 +1,5 @@
-import React from "react";
 import { cn } from "../lib/utils";
-import { Code, Users, BookOpen } from "lucide-react";
+import { Code, Users, BookOpen , Trophy } from "lucide-react";
 
 interface XCardProps {
   onOptionSelect: (view: string) => void;
@@ -25,6 +24,12 @@ function XCard({ onOptionSelect }: XCardProps) {
             icon: <BookOpen className="h-8 w-8 text-white" />,
             description: "Follow guided paths to learn new technologies.",
             view: "courses",
+        },
+        {
+            title: "Leaderboard",
+            icon: <Trophy className="h-8 w-8 text-white" />,
+            description: "find your position here",
+            view: "Leaderboard",
         },
     ];
 
