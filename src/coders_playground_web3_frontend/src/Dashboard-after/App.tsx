@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { coders_playground_web3_backend } from '../../../declarations/coders_playground_web3_backend';
 import { NavbarComp_DF } from '../components/Nav_df_comp';
 import  CoursesComp  from '../components/courses-comp'
+import CodingProblemsTable from '../components/problem_set_comp';
 interface DashboardAfterProps {
   walletId: string;
 }
@@ -33,6 +34,7 @@ const DashboardAfter: React.FC<DashboardAfterProps> = ({ walletId }) => {
     <div>
       <NavbarComp_DF />
       <CoursesComp />
+      <CodingProblemsTable />
     </div>
   );
 };
