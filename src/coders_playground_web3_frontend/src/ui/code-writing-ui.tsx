@@ -1,8 +1,5 @@
 import React from 'react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../components/ui/resizable";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
-import { Button } from './button';
-import { Play, Upload, Settings, Code } from 'lucide-react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./resizable";
 
 export const CodeWritingUI = ({
   problem,
