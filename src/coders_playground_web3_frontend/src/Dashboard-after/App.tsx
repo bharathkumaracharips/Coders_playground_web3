@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { coders_playground_web3_backend } from '../../../declarations/coders_playground_web3_backend';
 import { NavbarComp_DF } from '../components/Nav_df_comp';
+import  CoursesComp  from '../components/courses-comp'
 interface DashboardAfterProps {
   walletId: string;
 }
 
 const DashboardAfter: React.FC<DashboardAfterProps> = ({ walletId }) => {
-  const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -32,6 +32,7 @@ const DashboardAfter: React.FC<DashboardAfterProps> = ({ walletId }) => {
   return (
     <div>
       <NavbarComp_DF />
+      <CoursesComp />
     </div>
   );
 };
