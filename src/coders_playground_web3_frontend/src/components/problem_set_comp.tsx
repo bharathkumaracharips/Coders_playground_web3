@@ -67,6 +67,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Label } from "../ui/explore-lable";
 import { CodeWritingComp } from "./codewriting-comp";
+import { useParams } from "react-router-dom";
 
 // Types
 type Problem = {
@@ -78,10 +79,11 @@ type Problem = {
   frequency: number;
   tags: string[];
   premium: boolean;
+  language: string[];
 };
 
 // Sample data
-const problems: Problem[] = [
+const allProblems: Problem[] = [
   {
     id: "1",
     title: "Two Sum",
@@ -89,8 +91,9 @@ const problems: Problem[] = [
     status: "Solved",
     acceptance: 49.2,
     frequency: 85,
-    tags: ["Array", "Hash Table"],
+    tags: ["Array", "Hash Table", "Intro"],
     premium: false,
+    language: ["C", "C++", "Java", "Python", "Rust"],
   },
   {
     id: "2",
@@ -99,8 +102,9 @@ const problems: Problem[] = [
     status: "Attempted",
     acceptance: 37.8,
     frequency: 72,
-    tags: ["Linked List", "Math", "Recursion"],
+    tags: ["Linked List", "Math", "Recursion", "Beginner"],
     premium: false,
+    language: ["C++", "Java", "Python"],
   },
   {
     id: "3",
@@ -109,8 +113,9 @@ const problems: Problem[] = [
     status: "Solved",
     acceptance: 33.8,
     frequency: 91,
-    tags: ["Hash Table", "String", "Sliding Window"],
+    tags: ["Hash Table", "String", "Sliding Window", "Beginner"],
     premium: false,
+    language: ["C", "C++", "Java", "Python", "Rust"],
   },
     {
     id: "4",
@@ -119,8 +124,9 @@ const problems: Problem[] = [
     status: "Not Started",
     acceptance: 35.3,
     frequency: 68,
-    tags: ["Array", "Binary Search", "Divide and Conquer"],
+    tags: ["Array", "Binary Search", "Divide and Conquer", "Advanced"],
     premium: false,
+    language: ["C++", "Java", "Python", "Rust"],
   },
   {
     id: "5",
@@ -129,8 +135,9 @@ const problems: Problem[] = [
     status: "Attempted",
     acceptance: 32.1,
     frequency: 79,
-    tags: ["String", "Dynamic Programming"],
+    tags: ["String", "Dynamic Programming", "Intermediate"],
     premium: true,
+    language: ["C++", "Java", "Python"],
   },
   {
     id: "6",
@@ -139,8 +146,9 @@ const problems: Problem[] = [
     status: "Not Started",
     acceptance: 42.7,
     frequency: 45,
-    tags: ["String"],
+    tags: ["String", "Intermediate"],
     premium: false,
+    language: ["Python", "Java"],
   },
   {
     id: "7",
@@ -149,8 +157,9 @@ const problems: Problem[] = [
     status: "Solved",
     acceptance: 26.8,
     frequency: 62,
-    tags: ["Math"],
+    tags: ["Math", "Beginner"],
     premium: false,
+    language: ["C", "C++", "Java", "Python"],
   },
   {
     id: "8",
@@ -159,8 +168,53 @@ const problems: Problem[] = [
     status: "Not Started",
     acceptance: 16.4,
     frequency: 58,
-    tags: ["String"],
+    tags: ["String", "Intermediate"],
     premium: false,
+    language: ["C", "C++", "Rust"],
+  },
+  {
+    id: "9",
+    title: "Hello, World!",
+    difficulty: "Easy",
+    status: "Not Started",
+    acceptance: 95.0,
+    frequency: 100,
+    tags: ["Intro"],
+    premium: false,
+    language: ["C", "C++", "Java", "Python", "Solidity", "Rust", "Motoko"],
+  },
+  {
+    id: "10",
+    title: "File Word Count",
+    difficulty: "Hard",
+    status: "Not Started",
+    acceptance: 40.0,
+    frequency: 30,
+    tags: ["File Handling", "Advanced"],
+    premium: false,
+    language: ["C", "C++", "Java", "Python", "Rust"],
+  },
+  {
+    id: "11",
+    title: "Simple Smart Contract",
+    difficulty: "Easy",
+    status: "Not Started",
+    acceptance: 80.0,
+    frequency: 50,
+    tags: ["Smart Contract", "Intro"],
+    premium: false,
+    language: ["Solidity", "Motoko"],
+  },
+  {
+    id: "12",
+    title: "Ownership and Borrowing",
+    difficulty: "Hard",
+    status: "Not Started",
+    acceptance: 55.0,
+    frequency: 60,
+    tags: ["Memory Management", "Intermediate"],
+    premium: false,
+    language: ["Rust"],
   },
 ];
 
@@ -393,6 +447,15 @@ const columns: ColumnDef<Problem>[] = [
 ];
 
 function CodingProblemsTable() {
+  const { courseName } = useParams<{ courseName?: string }>();
+
+  const problems = React.useMemo(() => {
+    if (!courseName) {
+      return allProblems;
+    }
+    return allProblems.filter(p => p.language.includes(courseName));
+  }, [courseName]);
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -424,15 +487,15 @@ function CodingProblemsTable() {
   // Get unique values for filters
   const uniqueDifficulties = React.useMemo(() => {
     return Array.from(new Set(problems.map(p => p.difficulty)));
-  }, []);
+  }, [problems]);
 
   const uniqueStatuses = React.useMemo(() => {
     return Array.from(new Set(problems.map(p => p.status)));
-  }, []);
+  }, [problems]);
 
   const uniqueTags = React.useMemo(() => {
     return Array.from(new Set(problems.flatMap(p => p.tags))).sort();
-  }, []);
+  }, [problems]);
 
   // Filter states
   const selectedDifficulties = React.useMemo(() => {
@@ -485,7 +548,7 @@ function CodingProblemsTable() {
           </Button>
         </div>
         <div className="flex-grow">
-          <CodeWritingComp problem={selectedProblem} />
+          <CodeWritingComp problem={selectedProblem} language={courseName} />
         </div>
       </div>
     );
@@ -496,9 +559,13 @@ function CodingProblemsTable() {
       {/* Header */}
       <div className="flex items-center justify-between bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">Problems</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+            {courseName ? `${courseName} Problems` : "Problems"}
+          </h1>
           <p className="text-slate-600 mt-1">
-            Solve coding problems to improve your skills
+            {courseName
+              ? `Solve ${courseName} problems to improve your skills`
+              : "Solve coding problems to improve your skills"}
           </p>
         </div>
         <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl px-6">

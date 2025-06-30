@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-
 import Dashboard from './Dashboard/App';
 import DashboardAfter from './Dashboard-after/App';
 import { LoginUI } from './components/login-comp';
+import CodingProblemsTable from "./components/problem_set_comp";
 
 function DashboardAfterWrapper() {
   const { walletId } = useParams();
@@ -15,6 +16,8 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<LoginUI />} />
         <Route path="/dashboard-after/:walletId" element={<DashboardAfterWrapper />} />
+        <Route path="/problems" element={<CodingProblemsTable />} />
+        <Route path="/problems/:courseName" element={<CodingProblemsTable />} />
       </Routes>
     </Router>
   );

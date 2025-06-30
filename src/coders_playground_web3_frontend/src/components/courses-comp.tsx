@@ -9,6 +9,7 @@ import {
   IconSignature,
   IconTableColumn,
 } from "@tabler/icons-react";
+import { Link } from "react-router-dom";
 
 const Skeleton = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
@@ -72,14 +73,15 @@ const CoursesComp = () => {
       <h2 className="text-3xl font-bold mb-8 text-center">Courses</h2>
       <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem]">
         {courses.map((item, i) => (
-          <BentoGridItem
-            key={i}
-            title={item.name}
-            description={item.description}
-            header={item.header}
-            className={item.className}
-            icon={item.icon}
-          />
+          <Link to={`/problems/${item.name}`} key={i} className={item.className}>
+            <BentoGridItem
+              title={item.name}
+              description={item.description}
+              header={item.header}
+              icon={item.icon}
+              className="h-full"
+            />
+          </Link>
         ))}
       </BentoGrid>
     </div>

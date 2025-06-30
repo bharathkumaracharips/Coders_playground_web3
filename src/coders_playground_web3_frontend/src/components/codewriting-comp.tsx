@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CodeWritingUI } from '../ui/code-writing-ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
@@ -19,12 +19,27 @@ const languages = [
   { value: 'javascript', label: 'JavaScript' },
   { value: 'python', label: 'Python' },
   { value: 'java', label: 'Java' },
+  { value: 'c', label: 'C' },
+  { value: 'cpp', label: 'C++' },
+  { value: 'rust', label: 'Rust' },
+  { value: 'solidity', label: 'Solidity' },
+  { value: 'motoko', label: 'Motoko' },
 ];
 
-export const CodeWritingComp = ({ problem }: { problem: Problem }) => {
+export const CodeWritingComp = ({ problem, language: courseLanguage }: { problem: Problem, language?: string }) => {
   const [language, setLanguage] = useState('javascript');
   const [code, setCode] = useState('// Write your code here...');
   const [output, setOutput] = useState('');
+
+  useEffect(() => {
+    if (courseLanguage) {
+      const langValue = courseLanguage.toLowerCase().replace('++', 'pp');
+      const foundLang = languages.find(l => l.label.toLowerCase() === courseLanguage.toLowerCase() || l.value === langValue);
+      if (foundLang) {
+        setLanguage(foundLang.value);
+      }
+    }
+  }, [courseLanguage]);
 
   const handleRun = () => {
     setOutput(`Running ${language} code...\n${code}`);
@@ -40,7 +55,7 @@ export const CodeWritingComp = ({ problem }: { problem: Problem }) => {
 `;
 
   const languageSelector = (
-    <Select value={language} onValueChange={setLanguage}>
+    <Select value={language} onValueChange={setLanguage} disabled={!!courseLanguage}>
       <SelectTrigger className="w-[180px] bg-neutral-800 border-neutral-700">
         <SelectValue placeholder="Select Language" />
       </SelectTrigger>
