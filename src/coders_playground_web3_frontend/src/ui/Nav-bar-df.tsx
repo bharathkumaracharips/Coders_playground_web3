@@ -11,7 +11,7 @@ import ProfileComp from '../components/profile-comp'
 const navigationLinks = [
   { name: "Home", href: "#" },
   { name: "Learn", href: "#"},
-  { name: "Current Score", href: "#" },
+  { name: "Current Score", href: "#score" },
   { name: "Instructions", href: "#instructions" },
   { name: "Your Proposal", href: "#" },
   { name: "Pricing", href: "#pricing" },
@@ -34,6 +34,7 @@ export default function Navbar_df() {
     if (name === "Pricing") setShowPricing(true)
     else if (name === "Instructions") setShowInstructions(true)
     else if (name === "Profile") setShowProfile(true)
+    else if (name === "Current Score") navigate('/score')
     // else: do nothing or navigate
   }
 
@@ -53,7 +54,7 @@ export default function Navbar_df() {
                 key={link.name}
                 href={link.href}
                 onClick={e => {
-                  if (["Pricing", "Instructions"].includes(link.name)) {
+                  if (["Pricing", "Instructions", "Current Score"].includes(link.name)) {
                     e.preventDefault();
                     handleNavClick(link.name);
                   }
@@ -105,7 +106,7 @@ export default function Navbar_df() {
                 key={link.name}
                 href={link.href}
                 onClick={e => {
-                  if (["Pricing", "Instructions"].includes(link.name)) {
+                  if (["Pricing", "Instructions", "Current Score"].includes(link.name)) {
                     e.preventDefault();
                     handleNavClick(link.name);
                     setIsMobileMenuOpen(false);

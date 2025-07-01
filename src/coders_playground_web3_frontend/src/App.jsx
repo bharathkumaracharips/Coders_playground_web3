@@ -3,6 +3,7 @@ import Dashboard from './Dashboard/App';
 import DashboardAfter from './Dashboard-after/App';
 import { LoginUI } from './components/login-comp';
 import CodingProblemsTable from "./components/problem_set_comp";
+import SubmissionsComp from './components/submissions-comp';
 
 function DashboardAfterWrapper() {
   const { walletId } = useParams();
@@ -18,6 +19,7 @@ function App() {
         <Route path="/dashboard-after/:walletId" element={<DashboardAfterWrapper />} />
         <Route path="/problems" element={<CodingProblemsTable />} />
         <Route path="/problems/:courseName" element={<CodingProblemsTable />} />
+        <Route path="/score" element={<SubmissionsComp />} />
       </Routes>
     </Router>
   );
