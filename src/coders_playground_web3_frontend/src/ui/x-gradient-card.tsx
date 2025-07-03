@@ -31,6 +31,18 @@ function XCard({ onOptionSelect }: XCardProps) {
             description: "find your position here",
             view: "Leaderboard",
         },
+        {
+            title: "Solo Projects",
+            icon: <Code className="h-8 w-8 text-white" />,
+            description: "Build your own projects and get feedback from the community.",
+            view: "solo-projects",
+        },
+        {
+            title: "Group Projects",
+            icon: <Users className="h-8 w-8 text-white" />,
+            description: "Collaborate with other developers to build projects.",
+            view: "group-projects",
+        },
     ];
 
     return (
