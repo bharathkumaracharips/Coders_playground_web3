@@ -12,7 +12,7 @@ const navigationLinks = [
   { name: "Learn", href: "/learn-courses-frame" },
   { name: "Current Score", href: "#score" },
   { name: "Instructions", href: "#instructions" },
-  { name: "Your Proposal", href: "#" },
+  { name: "Your Proposal", href: "/propose" },
   { name: "Pricing", href: "#pricing" },
 ]
 
