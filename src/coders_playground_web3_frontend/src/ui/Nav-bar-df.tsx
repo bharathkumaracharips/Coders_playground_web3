@@ -7,10 +7,9 @@ import { PricingComp } from "../components/pricing-comp"
 import { InstructionComp } from "../components/instruction-comp"
 import { useNavigate, useParams } from 'react-router-dom'
 import ProfileComp from '../components/profile-comp'
-
 const navigationLinks = [
   { name: "Home", href: "#" },
-  { name: "Learn", href: "#"},
+  { name: "Learn", href: "/learn-courses-frame" },
   { name: "Current Score", href: "#score" },
   { name: "Instructions", href: "#instructions" },
   { name: "Your Proposal", href: "#" },

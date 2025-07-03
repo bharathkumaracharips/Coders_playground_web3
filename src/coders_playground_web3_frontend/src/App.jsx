@@ -4,7 +4,8 @@ import DashboardAfter from './Dashboard-after/App';
 import { LoginUI } from './components/login-comp';
 import CodingProblemsTable from "./components/problem_set_comp";
 import SubmissionsComp from './components/submissions-comp';
-
+import LearnSidebar from "./components/learn-sidebar";
+import { LearnCoursesFrame } from "./components/learn-courses-frame-comp";
 function DashboardAfterWrapper() {
   const { walletId } = useParams();
   return <DashboardAfter walletId={walletId || ""} />;
@@ -20,6 +21,8 @@ function App() {
         <Route path="/problems" element={<CodingProblemsTable />} />
         <Route path="/problems/:courseName" element={<CodingProblemsTable />} />
         <Route path="/score" element={<SubmissionsComp />} />
+        <Route path="/learn-sidebar" element={<LearnSidebar />} />
+        <Route path="/learn-courses-frame" element={<LearnCoursesFrame />} />
       </Routes>
     </Router>
   );
